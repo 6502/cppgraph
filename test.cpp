@@ -2,7 +2,8 @@
 #include "cppgraph.h"
 
 int main() {
-    Graph<char, int> g;
+    typedef Graph<char, int> Graph;
+    Graph g;
     auto a = g.addNode('a'), b = g.addNode('b'), c = g.addNode('c'), x = g.addNode('x');
     g.addLink(1, a, b);
     g.addLink(2, b, c);
@@ -15,17 +16,19 @@ int main() {
     g.addLink(9, x, c);
 
     auto dump = [&](){
-                    for (auto n=g.firstNode; n; n=n->next) {
-                        printf("Node '%c'\n", n->data);
-                        for (auto& L : n->outLinks()) {
-                            printf(" %i → '%c'\n", L->data, L->to->data);
-                        }
-                        for (auto& L : n->inLinks()) {
-                            printf(" %i ← '%c'\n", L->data, L->from->data);
-                        }
-                    }
+                    g.forEachNode([&](Graph::Node *n){
+                                      printf("Node '%c'\n", n->data);
+                                      n->forEachOutgoingLink([&](Graph::Link *L){
+                                                                 printf(" %i → '%c'\n", L->data, L->to->data);
+                                                                 return true;
+                                                             });
+                                      n->forEachIncomingLink([&](Graph::Link *L){
+                                                                 printf(" %i ← '%c'\n", L->data, L->from->data);
+                                                                 return true;
+                                                             });
+                                      return true;
+                                  });
                 };
-
     printf("Before ---------\n");
     dump();
     delete a;

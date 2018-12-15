@@ -1,7 +1,6 @@
 #if !defined(CPPGRAPH_H_INCLUDED)
 #define CPPGRAPH_H_INCLUDED
 
-#include <vector>
 #include <memory>
 
 template<typename ND, typename LD>
@@ -36,20 +35,20 @@ struct Graph {
             if (next) next->prev = prev; else graph.lastNode = prev;
         }
 
-        std::vector<Link *> outLinks() {
-            std::vector<Link *> res;
+        template<typename CBack>
+        bool forEachOutgoingLink(CBack cb) {
             for (Link *x=firstOut; x; x=x->nextInFrom) {
-                res.push_back(x);
+                if (!cb(x)) return false;
             }
-            return res;
+            return true;
         }
 
-        std::vector<Link *> inLinks() {
-            std::vector<Link *> res;
+        template<typename CBack>
+        bool forEachIncomingLink(CBack cb) {
             for (Link *x=firstIn; x; x=x->nextInTo) {
-                res.push_back(x);
+                if (!cb(x)) return false;
             }
-            return res;
+            return true;
         }
     };
 
@@ -113,6 +112,22 @@ struct Graph {
     Link *addLink(LD data, Node *from, Node *to) { return new Link(data, from, to); }
     Node *addNode() { return new Node(*this); }
     Link *addLink(Node *from, Node *to) { return new Link(from, to); }
+
+    template<typename CBack>
+    bool forEachNode(CBack cb) {
+        for (Node *n=firstNode; n; n=n->next) {
+            if (!cb(n)) return false;
+        }
+        return true;
+    }
+
+    template<typename CBack>
+    bool forEachLink(CBack cb) {
+        for (Link *L=firstLink; L; L=L->next) {
+            if (!cb(L)) return false;
+        }
+        return true;
+    }
 };
 
 #endif
