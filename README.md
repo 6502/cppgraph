@@ -1,6 +1,8 @@
 # cppgraph
 dynamic C++ graph data structure
 
+![diagram](/graph.png "Simplified diagram")
+
 This code is an example of a data structure able to represent dynamic graphs
 (where you can add or remove nodes and vertices efficiently):
 
