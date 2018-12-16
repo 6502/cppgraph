@@ -18,4 +18,4 @@ nodes and loops (a node connected to itself).
 The picture shows the internal links used by two nodes linked unidirectionally
 to a third one (links for the global lists of nodes and edges are not shown).
 
-Written as support for https://stackoverflow.com/a/5493656/320726
+Written as an example for https://stackoverflow.com/a/5493656/320726
